@@ -2,7 +2,7 @@
   "name": "benefits-chatbot",
   "version": "0.1.0",
   "private": true,
-  "tyoe": "module",
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -10,6 +10,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-react": "^7.25.9",
+    "dotenv": "^16.4.5",
     "next": "15.0.3",
     "react": "19.0.0-rc-66855b96-20241106",
     "react-dom": "19.0.0-rc-66855b96-20241106",
