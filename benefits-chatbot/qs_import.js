@@ -1,5 +1,8 @@
 import weaviate from 'weaviate-client';
 import dotenv from 'dotenv';
+import fs from 'fs/promises';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 dotenv.config();
 
@@ -19,22 +22,44 @@ const client = await weaviate.connectToWeaviateCloud(
 );
 
 // Load data
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+function transformPropertyNames(data) {
+  return data.map(item => {
+    const transformedItem = {};
+    for (const key in item) {
+      const newKey = key.match(/^[0-9]/) ? `_${key}` : key; // Prefix with underscore if key starts with a number
+      transformedItem[newKey] = item[key];
+    }
+    return transformedItem;
+  });
+}
+
 async function getJsonData() {
-  const file = await fetch(
-    'https://raw.githubusercontent.com/weaviate-tutorials/quickstart/main/data/jeopardy_tiny.json'
-  );
-  return file.json();
+  const folderPath = path.join(__dirname, 'gov-json');
+  const files = await fs.readdir(folderPath);
+  const jsonFiles = files.filter(file => file.endsWith('.json'));
+
+  const data = [];
+  for (const file of jsonFiles) {
+    const filePath = path.join(folderPath, file);
+    const fileContent = await fs.readFile(filePath, 'utf-8');
+    data.push(...JSON.parse(fileContent));
+  }
+
+  return transformPropertyNames(data);
 }
 
 // Note: The TS client does not have a `batch` method yet
 // We use `insertMany` instead, which sends all of the data in one request
-async function importQuestions() {
-  const questions = client.collections.get('Question');
+async function importGovBenefits() {
+  const govBenefits = client.collections.get('GovBenefits');
   const data = await getJsonData();
-  const result = await questions.data.insertMany(data);
+  const result = await govBenefits.data.insertMany(data);
   console.log('Insertion response: ', result);
 }
 
-await importQuestions();
+await importGovBenefits();
 
 client.close(); // Close the client connection
