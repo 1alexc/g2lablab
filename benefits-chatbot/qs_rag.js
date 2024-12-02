@@ -18,12 +18,12 @@ const client = await weaviate.connectToWeaviateCloud(
   }
 );
 
-const questions = client.collections.get('Question');
+const govBenefits = client.collections.get('GovBenefits');
 
-const result = await questions.generate.nearText(
-  'biology',
+const result = await govBenefits.generate.nearText(
+  'toilet',
   {
-    groupedTask: 'Write a tweet with emojis about these facts.',
+    groupedTask: 'explain how this could effect a persons benefit claim',
   },
   {
     limit: 2,

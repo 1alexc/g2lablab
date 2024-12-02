@@ -18,9 +18,9 @@ const client = await weaviate.connectToWeaviateCloud(
   }
 );
 
-const questions = client.collections.get('Question');
+const questions = client.collections.get('GovBenefits');
 
-const result = await questions.query.nearText('biology', {
+const result = await questions.query.nearText('claim', {
   limit: 2,
 });
 
