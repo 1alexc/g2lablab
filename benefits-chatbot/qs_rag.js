@@ -21,9 +21,9 @@ const client = await weaviate.connectToWeaviateCloud(
 const govBenefits = client.collections.get('GovBenefits');
 
 const result = await govBenefits.generate.nearText(
-  'toilet',
+  'Claiming if Im 16 or 17',
   {
-    groupedTask: 'explain how this could effect a persons benefit claim',
+    groupedTask: 'Explain the execpetion for claiming at this age',
   },
   {
     limit: 2,
